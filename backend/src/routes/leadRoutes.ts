@@ -5,9 +5,9 @@ import {
   createLead,
   updateLead,
   deleteLead,
-} from "../controllers/leadsController";
+} from "../controllers/leadsController.ts";
 
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware.ts";
 // import { roleMiddleware } from "../middlewares/roleMiddleware";  // optional
 
 const router = Router();

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
+import prisma from "../utils/prisma.ts";
 
 export const getAllLeads = async (req: Request, res: Response) => {
   try {

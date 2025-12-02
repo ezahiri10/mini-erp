@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma/index.js';
 
 // Create a single Prisma Client instance
 // Use a global variable to prevent multiple instances in development with hot reload

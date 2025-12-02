@@ -3,11 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 // Import Routes
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import leadRoutes from "./routes/leadRoutes";
-import claimRoutes from "./routes/claimRoutes";
-import productRoutes from "./routes/productRoutes";
+import authRoutes from "./routes/authRoutes.ts";
+import userRoutes from "./routes/userRoutes.ts";
+import leadRoutes from "./routes/leadRoutes.ts";
+import claimRoutes from "./routes/claimRoutes.ts";
+import productRoutes from "./routes/productRoutes.ts";
 
 dotenv.config();
 

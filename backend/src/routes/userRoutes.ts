@@ -4,9 +4,9 @@ import {
   getUserById,
   updateUser,
   deleteUser,
-} from "../controllers/usersController";
+} from "../controllers/usersController.ts";
 
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware.ts";
 // import { roleMiddleware } from "../middlewares/roleMiddleware"; // optional
 
 const router = Router();

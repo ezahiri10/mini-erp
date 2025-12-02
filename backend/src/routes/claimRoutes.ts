@@ -5,9 +5,9 @@ import {
   createClaim,
   updateClaim,
   deleteClaim,
-} from "../controllers/claimsController";
+} from "../controllers/claimsController.ts";
 
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware.ts";
 // import { roleMiddleware } from "../middlewares/roleMiddleware";
 
 const router = Router();

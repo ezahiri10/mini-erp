@@ -2,8 +2,9 @@
   "name": "mini-erp-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --watch \"src/**/*.ts\" --exec ts-node src/server.ts"
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -31,14 +32,11 @@
     "nodemon": "^3.1.11",
     "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "target": "ES2023",
-    "strict": true,
-    "esModuleInterop": true,
-    "ignoreDeprecations": "6.0"
+  "ts-node": {
+    "esm": true,
+    "experimentalEsm": true
   }
 }

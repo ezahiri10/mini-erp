@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../utils/jwt";
-import { prisma } from "../utils/prisma";
+import { verifyToken } from "../utils/jwt.ts";
+import prisma from "../utils/prisma.ts";
 
 export const authMiddleware = async (
   req: Request,

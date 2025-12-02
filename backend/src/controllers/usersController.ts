@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
-import { hashPassword } from "../utils/hash";
+import prisma from "../utils/prisma.ts";
+import { hashPassword } from "../utils/hash.ts";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {

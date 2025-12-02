@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
-import { hashPassword, comparePassword } from "../utils/hash";
-import { generateToken } from "../utils/jwt";
+import prisma from "../utils/prisma.ts";
+import { hashPassword, comparePassword } from "../utils/hash.ts";
+import { generateToken } from "../utils/jwt.ts";
 
 export const register = async (req: Request, res: Response) => {
   try {

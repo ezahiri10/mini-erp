@@ -5,9 +5,9 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../controllers/productsController";
+} from "../controllers/productsController.ts";
 
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware.ts";
 // import { roleMiddleware } from "../middlewares/roleMiddleware";  
 // Example: admin only → roleMiddleware("ADMIN")
 
