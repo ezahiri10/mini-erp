@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+// -------------------------
+// User entity
+// -------------------------
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+
+  // Operator / Supervisor relations
+  leadsAssigned  Lead[]  @relation("AssignedLeads")
+  claimsAssigned Claim[] @relation("AssignedClaims")
+
+  // Client relations
+  claimsAsClient   Claim[]
+  productsAsClient Product[]
+  comments         Comment[]
+}
+
+// -------------------------
+// Lead entity
+// -------------------------
+model Lead {
+  id         String     @id @default(uuid())
+  name       String
+  email      String
+  status     LeadStatus @default(NEW)
+  assignedTo String? // Operator ID
+  createdAt  DateTime   @default(now())
+
+  // Relations
+  comments     Comment[]
+  assignedUser User?     @relation("AssignedLeads", fields: [assignedTo], references: [id])
+}
+
+// -------------------------
+// Claim entity
+// -------------------------
+model Claim {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  status      ClaimStatus @default(SUBMITTED)
+  assignedTo  String? // Operator or Supervisor
+  clientId    String
+  files       String[]
+  createdAt   DateTime    @default(now())
+
+  // Relations
+  assignedUser User?     @relation("AssignedClaims", fields: [assignedTo], references: [id])
+  client       User      @relation(fields: [clientId], references: [id])
+  comments     Comment[]
+}
+
+// -------------------------
+// Product/Service entity
+// -------------------------
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  type      String?
+  price     Float
+  clientId  String
+  createdAt DateTime @default(now())
+
+  client User @relation(fields: [clientId], references: [id])
+}
+
+// -------------------------
+// Comment entity (for Leads and Claims)
+// -------------------------
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  authorId  String
+  leadId    String?
+  claimId   String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  author User   @relation(fields: [authorId], references: [id])
+  lead   Lead?  @relation(fields: [leadId], references: [id])
+  claim  Claim? @relation(fields: [claimId], references: [id])
+}
+
+// -------------------------
+// Enums
+// -------------------------
+enum Role {
+  ADMIN
+  SUPERVISOR
+  OPERATOR
+  CLIENT
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  LOST
+}
+
+enum ClaimStatus {
+  SUBMITTED
+  IN_REVIEW
+  RESOLVED
+}
