@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Users, Plus, Edit2, Trash2, DollarSign, Activity, Search } from "lucide-react";
+import { Users, Plus, Edit2, Trash2, DollarSign, Activity, Search, ToggleRight, ToggleLeft } from "lucide-react";
 import { toast } from "react-toastify";
 import { apiPost, apiPut, apiDelete, apiGet } from "@/lib/api";
 
@@ -24,8 +24,10 @@ export default function ClientsPage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClientForDelete, setSelectedClientForDelete] = useState<Client | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,7 +51,7 @@ export default function ClientsPage() {
           email: user.email,
           phone: user.phone || "",
           totalIncome: 0,
-          status: user.status || "ACTIVE",
+          status: (user.status || "active").toUpperCase() as "ACTIVE" | "INACTIVE",
           createdAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A",
           productsCount: 0,
           claimsCount: 0,
@@ -75,6 +77,30 @@ export default function ClientsPage() {
       ? "bg-emerald-900/30 text-emerald-400 border-emerald-700/50"
       : "bg-red-900/30 text-red-400 border-red-700/50";
   };
+
+  async function handleToggleStatus(client: Client) {
+    try {
+      const newStatus = client.status === "ACTIVE" ? "inactive" : "active";
+      await apiPut(`/users/${client.id}`, { status: newStatus });
+      toast.success(`Client ${newStatus === "active" ? "activated" : "deactivated"}`);
+      fetchClients();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to toggle client status");
+    }
+  }
+
+  async function handleDeleteClient() {
+    if (!selectedClientForDelete) return;
+    try {
+      await apiDelete(`/users/${selectedClientForDelete.id}`);
+      toast.success("Client deleted successfully");
+      setDeleteConfirmationOpen(false);
+      setSelectedClientForDelete(null);
+      fetchClients();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete client");
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -159,17 +185,28 @@ export default function ClientsPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1 text-emerald-400 font-semibold">
                         <DollarSign className="w-4 h-4" />
-                        ${client.totalIncome.toLocaleString()}
+                        {client.totalIncome.toLocaleString()}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadge(client.status)}`}>
-                        {client.status}
+                        {client.status === "ACTIVE" ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-slate-400">{client.productsCount} products</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleToggleStatus(client)}
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title={client.status === "ACTIVE" ? "Deactivate" : "Activate"}
+                        >
+                          {client.status === "ACTIVE" ? (
+                            <ToggleRight className="w-4 h-4 text-emerald-400" />
+                          ) : (
+                            <ToggleLeft className="w-4 h-4 text-red-400" />
+                          )}
+                        </button>
                         <button
                           onClick={() => {
                             setEditingClient(client);
@@ -196,6 +233,10 @@ export default function ClientsPage() {
                           <Activity className="w-4 h-4 text-cyan-400" />
                         </button>
                         <button
+                          onClick={() => {
+                            setSelectedClientForDelete(client);
+                            setDeleteConfirmationOpen(true);
+                          }}
                           className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
                           title="Delete"
                         >
@@ -349,6 +390,44 @@ export default function ClientsPage() {
                 className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors font-medium"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationOpen && selectedClientForDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Delete Client?</h2>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-slate-300">
+                Are you sure you want to delete <span className="font-semibold text-white">{selectedClientForDelete.name}</span>? This action cannot be undone.
+              </p>
+              <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3">
+                <p className="text-sm text-red-300">This will permanently remove all associated data.</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={() => {
+                  setDeleteConfirmationOpen(false);
+                  setSelectedClientForDelete(null);
+                }}
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteClient}
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all font-medium"
+              >
+                Delete
               </button>
             </div>
           </div>
