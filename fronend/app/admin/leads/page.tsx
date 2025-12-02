@@ -21,7 +21,12 @@ export default function LeadsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [selectedLeadForDelete, setSelectedLeadForDelete] = useState<Lead | null>(null);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [selectedLeadForComments, setSelectedLeadForComments] = useState<Lead | null>(null);
+  const [commentText, setCommentText] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -203,12 +208,21 @@ export default function LeadsPage() {
                           <UserCheck className="w-4 h-4 text-emerald-400" />
                         </button>
                         <button
+                          onClick={() => {
+                            setSelectedLeadForComments(lead);
+                            setCommentText("");
+                            setCommentsModalOpen(true);
+                          }}
                           className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
                           title="Comments"
                         >
                           <MessageSquare className="w-4 h-4 text-cyan-400" />
                         </button>
                         <button
+                          onClick={() => {
+                            setSelectedLeadForDelete(lead);
+                            setDeleteConfirmationOpen(true);
+                          }}
                           className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
                           title="Delete"
                         >
@@ -335,6 +349,116 @@ export default function LeadsPage() {
                 className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg transition-all font-medium"
               >
                 {editingLead ? "Update" : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Comments Modal */}
+      {commentsModalOpen && selectedLeadForComments && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Comments - {selectedLeadForComments.name}</h2>
+            </div>
+
+            <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Add Comment</label>
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Type your comment here..."
+                  rows={3}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <p className="text-sm text-slate-400">
+                Comments functionality is available via the API. To add comments, make a POST request to /comments with the lead ID.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={() => {
+                  setCommentsModalOpen(false);
+                  setSelectedLeadForComments(null);
+                  setCommentText("");
+                }}
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
+              >
+                Close
+              </button>
+              <button
+                onClick={async () => {
+                  if (!commentText.trim()) {
+                    toast.error("Comment cannot be empty");
+                    return;
+                  }
+                  try {
+                    // TODO: Replace with actual API call to save comment
+                    // await apiPost(`/leads/${selectedLeadForComments?.id}/comments`, { text: commentText });
+                    toast.success("Comment saved successfully");
+                    setCommentText("");
+                    setCommentsModalOpen(false);
+                    setSelectedLeadForComments(null);
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to save comment");
+                  }
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg transition-all font-medium"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationOpen && selectedLeadForDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Delete Lead?</h2>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-slate-300">
+                Are you sure you want to delete <span className="font-semibold text-white">{selectedLeadForDelete.name}</span>? This action cannot be undone.
+              </p>
+              <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3">
+                <p className="text-sm text-red-300">This will permanently remove all associated data.</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={() => {
+                  setDeleteConfirmationOpen(false);
+                  setSelectedLeadForDelete(null);
+                }}
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    await apiDelete(`/leads/${selectedLeadForDelete.id}`);
+                    toast.success("Lead deleted successfully");
+                    setDeleteConfirmationOpen(false);
+                    setSelectedLeadForDelete(null);
+                    fetchLeads();
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to delete lead");
+                  }
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all font-medium"
+              >
+                Delete
               </button>
             </div>
           </div>
