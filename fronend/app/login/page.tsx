@@ -43,10 +43,33 @@ export default function LoginPage() {
     try {
       const result = await apiLogin(email.trim(), password.trim(), role);
       console.log("Login successful:", result);
+      
+      // Verify token was saved
+      const savedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!savedToken) {
+        console.error("Token not saved to localStorage!");
+        setError("Login failed: Token not received");
+        setLoading(false);
+        return;
+      }
+      
+      // Determine redirect path based on user's actual role from server
+      let redirectPath = "/clients/dashboard"; // Default for Client
+      
+      if (result.user?.role === "ADMIN") {
+        redirectPath = "/admin";
+      } else if (result.user?.role === "SUPERVISOR") {
+        redirectPath = "/supervisor/dashboard";
+      } else if (result.user?.role === "OPERATOR") {
+        redirectPath = "/operator/dashboard";
+      }
+      
+      console.log("Redirecting to:", redirectPath);
+      
       // Add small delay before redirect to ensure token is saved
       setTimeout(() => {
-        router.push("/clients/dashboard");
-      }, 500);
+        router.push(redirectPath);
+      }, 300);
     } catch (err: any) {
       const errorMsg = err.message || "Login failed. Please try again.";
       setError(errorMsg);

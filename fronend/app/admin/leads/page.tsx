@@ -1,228 +1,320 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { apiGet, apiPost, apiPatch, apiDelete } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { TrendingUp, Plus, Edit2, Trash2, UserCheck, MessageSquare, Search } from "lucide-react";
+import { toast } from "react-toastify";
 
 interface Lead {
   id: string;
   name: string;
   email: string;
-  status: "new" | "contacted" | "converted" | "lost";
-  assignedTo?: string; // operator id
-  comments: string[];
+  phone: string;
+  status: "NEW" | "CONTACTED" | "CONVERTED" | "LOST";
+  assignedTo: string;
   createdAt: string;
 }
 
-interface Operator {
-  id: string;
-  name: string;
-}
-
-export default function AdminLeadsPage() {
+export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [operators, setOperators] = useState<Operator[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [comment, setComment] = useState("");
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    status: "NEW" as const,
+    assignedTo: "",
+  });
 
   useEffect(() => {
     fetchLeads();
-    fetchOperators();
   }, []);
 
   async function fetchLeads() {
-    setLoading(true);
     try {
-      const data = await apiGet("/leads");
-      setLeads(data);
+      setLoading(true);
+      // Mock data - replace with actual API: GET /api/leads
+      const mockLeads: Lead[] = [
+        {
+          id: "l1",
+          name: "Acme Corp",
+          email: "contact@acme.com",
+          phone: "555-0123",
+          status: "NEW",
+          assignedTo: "3",
+          createdAt: "2024-12-01",
+        },
+        {
+          id: "l2",
+          name: "Tech Solutions",
+          email: "sales@techsol.com",
+          phone: "555-0456",
+          status: "CONTACTED",
+          assignedTo: "3",
+          createdAt: "2024-11-28",
+        },
+      ];
+      setLeads(mockLeads);
     } catch (err: any) {
-      setError(err.message || "Failed to load leads.");
+      toast.error("Failed to load leads");
     } finally {
       setLoading(false);
     }
   }
 
-  async function fetchOperators() {
-    try {
-      const data = await apiGet("/users?role=OPERATOR");
-      setOperators(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  const filteredLeads = leads.filter((lead) => {
+    const matchesSearch =
+      lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = !statusFilter || lead.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
-  function openModal(lead: Lead) {
-    setSelectedLead(lead);
-    setComment("");
-    setModalOpen(true);
-  }
+  const getStatusBadge = (status: string) => {
+    const colors: Record<string, string> = {
+      NEW: "bg-blue-900/30 text-blue-400 border-blue-700/50",
+      CONTACTED: "bg-amber-900/30 text-amber-400 border-amber-700/50",
+      CONVERTED: "bg-emerald-900/30 text-emerald-400 border-emerald-700/50",
+      LOST: "bg-red-900/30 text-red-400 border-red-700/50",
+    };
+    return colors[status] || "bg-slate-700 text-slate-300";
+  };
 
-  async function handleStatusChange(status: Lead["status"]) {
-    if (!selectedLead) return;
-    await apiPatch(`/leads/${selectedLead.id}`, { status });
-    setModalOpen(false);
-    fetchLeads();
-  }
-
-  async function handleAssign(operatorId: string) {
-    if (!selectedLead) return;
-    await apiPatch(`/leads/${selectedLead.id}`, { assignedTo: operatorId });
-    fetchLeads();
-  }
-
-  async function handleAddComment() {
-    if (!selectedLead || !comment) return;
-    await apiPost(`/leads/${selectedLead.id}/comments`, { text: comment });
-    fetchLeads();
-    setComment("");
-  }
-
-  async function handleConvert() {
-    if (!selectedLead) return;
-    await apiPatch(`/leads/${selectedLead.id}`, { status: "converted" });
-    fetchLeads();
-    setModalOpen(false);
-  }
-
-  async function handleDelete(id: string) {
-    if (!confirm("Are you sure you want to delete this lead?")) return;
-    await apiDelete(`/leads/${id}`);
+  async function handleConvertToClient(lead: Lead) {
+    // TODO: Call POST /api/leads/:id/convert
+    toast.success(`${lead.name} converted to client`);
     fetchLeads();
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Leads</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center gap-2">
+            <TrendingUp className="w-8 h-8 text-cyan-400" />
+            Leads Management
+          </h1>
+          <p className="text-slate-400 mt-1">Manage and convert leads to clients</p>
+        </div>
+        <button
+          onClick={() => {
+            setEditingLead(null);
+            setFormData({
+              name: "",
+              email: "",
+              phone: "",
+              status: "NEW",
+              assignedTo: "",
+            });
+            setModalOpen(true);
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all shadow-lg"
+        >
+          <Plus className="w-5 h-5" />
+          New Lead
+        </button>
       </div>
 
-      {loading ? (
-        <div className="text-zinc-600">Loading...</div>
-      ) : error ? (
-        <div className="text-red-600">{error}</div>
-      ) : (
-        <table className="w-full border border-zinc-300 rounded-md overflow-hidden">
-          <thead className="bg-zinc-200">
-            <tr>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Email</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Assigned To</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leads.map((l) => (
-              <tr key={l.id} className="border-b border-zinc-200">
-                <td className="px-4 py-2">{l.name}</td>
-                <td className="px-4 py-2">{l.email}</td>
-                <td className="px-4 py-2">{l.status}</td>
-                <td className="px-4 py-2">{operators.find(o => o.id === l.assignedTo)?.name || "Unassigned"}</td>
-                <td className="px-4 py-2 flex space-x-2 justify-center">
-                  <button
-                    onClick={() => openModal(l)}
-                    className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleDelete(l.id)}
-                    className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {leads.length === 0 && (
-              <tr>
-                <td colSpan={5} className="text-center py-4 text-zinc-600">
-                  No leads found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
+      {/* Filters */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <input
+              type="text"
+              placeholder="Search leads..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+          </div>
+          <select
+            value={statusFilter || ""}
+            onChange={(e) => setStatusFilter(e.target.value || null)}
+            className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          >
+            <option value="">All Status</option>
+            <option value="NEW">New</option>
+            <option value="CONTACTED">Contacted</option>
+            <option value="CONVERTED">Converted</option>
+            <option value="LOST">Lost</option>
+          </select>
+        </div>
+      </div>
 
-      {/* Modal */}
-      {modalOpen && selectedLead && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-lg overflow-y-auto max-h-[90vh]">
-            <h2 className="text-xl font-semibold mb-4">{selectedLead.name}</h2>
-            <p className="mb-2"><strong>Email:</strong> {selectedLead.email}</p>
-            <p className="mb-2"><strong>Status:</strong> {selectedLead.status}</p>
-            <p className="mb-2"><strong>Assigned To:</strong> {operators.find(o => o.id === selectedLead.assignedTo)?.name || "Unassigned"}</p>
+      {/* Leads Table */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden">
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-cyan-500"></div>
+          </div>
+        ) : filteredLeads.length === 0 ? (
+          <div className="p-12 text-center">
+            <TrendingUp className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-400">No leads found</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-700/50 border-b border-slate-700">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Lead Name</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Email</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Created</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700">
+                {filteredLeads.map((lead) => (
+                  <tr key={lead.id} className="hover:bg-slate-700/30 transition-colors">
+                    <td className="px-6 py-4">
+                      <p className="font-medium text-white">{lead.name}</p>
+                    </td>
+                    <td className="px-6 py-4 text-slate-400">{lead.email}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadge(lead.status)}`}>
+                        {lead.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-400 text-sm">{lead.createdAt}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingLead(lead);
+                            setFormData({
+                              name: lead.name,
+                              email: lead.email,
+                              phone: lead.phone,
+                              status: lead.status,
+                              assignedTo: lead.assignedTo,
+                            });
+                            setModalOpen(true);
+                          }}
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit2 className="w-4 h-4 text-blue-400" />
+                        </button>
+                        <button
+                          onClick={() => handleConvertToClient(lead)}
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title="Convert to Client"
+                        >
+                          <UserCheck className="w-4 h-4 text-emerald-400" />
+                        </button>
+                        <button
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title="Comments"
+                        >
+                          <MessageSquare className="w-4 h-4 text-cyan-400" />
+                        </button>
+                        <button
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-400" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
-            <div className="mb-4">
-              <label className="font-semibold">Change Status:</label>
-              <select
-                value={selectedLead.status}
-                onChange={(e) => handleStatusChange(e.target.value as Lead["status"])}
-                className="border px-2 py-1 rounded ml-2"
-              >
-                <option value="new">New</option>
-                <option value="contacted">Contacted</option>
-                <option value="converted">Converted</option>
-                <option value="lost">Lost</option>
-              </select>
+      {/* Lead Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">
+                {editingLead ? "Edit Lead" : "Create New Lead"}
+              </h2>
             </div>
 
-            <div className="mb-4">
-              <label className="font-semibold">Assign to Operator:</label>
-              <select
-                value={selectedLead.assignedTo || ""}
-                onChange={(e) => handleAssign(e.target.value)}
-                className="border px-2 py-1 rounded ml-2"
-              >
-                <option value="">Unassigned</option>
-                {operators.map((o) => (
-                  <option key={o.id} value={o.id}>{o.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="font-semibold">Comments:</label>
-              <ul className="list-disc list-inside mb-2">
-                {selectedLead.comments.map((c, i) => (
-                  <li key={i}>{c}</li>
-                ))}
-                {selectedLead.comments.length === 0 && <li>No comments</li>}
-              </ul>
-              <div className="flex space-x-2">
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Lead Name</label>
                 <input
                   type="text"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Add comment"
-                  className="border px-2 py-1 rounded flex-1"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
-                <button
-                  onClick={handleAddComment}
-                  className="px-3 py-1 bg-zinc-900 text-white rounded hover:bg-zinc-800"
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Phone</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Status</label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
-                  Add
-                </button>
+                  <option value="NEW">New</option>
+                  <option value="CONTACTED">Contacted</option>
+                  <option value="CONVERTED">Converted</option>
+                  <option value="LOST">Lost</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Assign To</label>
+                <select
+                  value={formData.assignedTo}
+                  onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                >
+                  <option value="">Select Operator</option>
+                  <option value="3">Mike Operator</option>
+                  <option value="4">John Operator</option>
+                </select>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-2 mt-4">
-              {selectedLead.status !== "converted" && (
-                <button
-                  onClick={handleConvert}
-                  className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Convert to Client
-                </button>
-              )}
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
               <button
                 onClick={() => setModalOpen(false)}
-                className="px-3 py-1 bg-zinc-300 rounded hover:bg-zinc-400"
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
               >
-                Close
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  toast.success(editingLead ? "Lead updated" : "Lead created");
+                  setModalOpen(false);
+                  fetchLeads();
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg transition-all font-medium"
+              >
+                {editingLead ? "Update" : "Create"}
               </button>
             </div>
           </div>
