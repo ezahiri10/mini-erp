@@ -20,7 +20,9 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [selectedProductForDelete, setSelectedProductForDelete] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     type: "PRODUCT" as "SERVICE" | "PRODUCT",
@@ -59,6 +61,19 @@ export default function ProductsPage() {
     const matchesType = !typeFilter || product.type === typeFilter;
     return matchesSearch && matchesType;
   });
+
+  async function handleDeleteProduct() {
+    if (!selectedProductForDelete) return;
+    try {
+      await apiDelete(`/products/${selectedProductForDelete.id}`);
+      toast.success("Product deleted successfully");
+      setDeleteConfirmationOpen(false);
+      setSelectedProductForDelete(null);
+      fetchProducts();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete product");
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -175,6 +190,10 @@ export default function ProductsPage() {
                           <Edit2 className="w-4 h-4 text-blue-400" />
                         </button>
                         <button
+                          onClick={() => {
+                            setSelectedProductForDelete(product);
+                            setDeleteConfirmationOpen(true);
+                          }}
                           className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
                           title="Delete"
                         >
@@ -284,6 +303,44 @@ export default function ProductsPage() {
                 className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-lg transition-all font-medium"
               >
                 {editingProduct ? "Update" : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationOpen && selectedProductForDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Delete Product?</h2>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-slate-300">
+                Are you sure you want to delete <span className="font-semibold text-white">{selectedProductForDelete.name}</span>? This action cannot be undone.
+              </p>
+              <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3">
+                <p className="text-sm text-red-300">This will permanently remove the product from the system.</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={() => {
+                  setDeleteConfirmationOpen(false);
+                  setSelectedProductForDelete(null);
+                }}
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteProduct}
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all font-medium"
+              >
+                Delete
               </button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Network, Plus, Edit2, Trash2, Search } from "lucide-react";
+import { Network, Plus, Edit2, Trash2, Search, ToggleRight, ToggleLeft } from "lucide-react";
 import { toast } from "react-toastify";
 
 interface Binding {
@@ -35,6 +35,8 @@ export default function StructurePage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBinding, setEditingBinding] = useState<Binding | null>(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [selectedBindingForDelete, setSelectedBindingForDelete] = useState<Binding | null>(null);
   const [formData, setFormData] = useState({
     operatorId: "",
     supervisorId: "",
@@ -112,6 +114,23 @@ export default function StructurePage() {
       ? "bg-emerald-900/30 text-emerald-400 border-emerald-700/50"
       : "bg-red-900/30 text-red-400 border-red-700/50";
   };
+
+  function handleToggleStatus(binding: Binding) {
+    const updatedBindings = bindings.map((b) =>
+      b.id === binding.id ? { ...b, status: (b.status === "ACTIVE" ? "INACTIVE" : "ACTIVE") as "ACTIVE" | "INACTIVE" } : b
+    );
+    setBindings(updatedBindings);
+    toast.success(`Binding ${binding.status === "ACTIVE" ? "deactivated" : "activated"}`);
+  }
+
+  function handleDeleteBinding() {
+    if (!selectedBindingForDelete) return;
+    const updatedBindings = bindings.filter((b) => b.id !== selectedBindingForDelete.id);
+    setBindings(updatedBindings);
+    toast.success("Binding deleted successfully");
+    setDeleteConfirmationOpen(false);
+    setSelectedBindingForDelete(null);
+  }
 
   return (
     <div className="space-y-6">
@@ -209,6 +228,17 @@ export default function StructurePage() {
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <button
+                          onClick={() => handleToggleStatus(binding)}
+                          className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
+                          title={binding.status === "ACTIVE" ? "Deactivate" : "Activate"}
+                        >
+                          {binding.status === "ACTIVE" ? (
+                            <ToggleRight className="w-4 h-4 text-emerald-400" />
+                          ) : (
+                            <ToggleLeft className="w-4 h-4 text-red-400" />
+                          )}
+                        </button>
+                        <button
                           onClick={() => {
                             setEditingBinding(binding);
                             setFormData({
@@ -223,6 +253,10 @@ export default function StructurePage() {
                           <Edit2 className="w-4 h-4 text-blue-400" />
                         </button>
                         <button
+                          onClick={() => {
+                            setSelectedBindingForDelete(binding);
+                            setDeleteConfirmationOpen(true);
+                          }}
                           className="p-2 hover:bg-slate-600 rounded-lg transition-colors"
                           title="Delete"
                         >
@@ -305,6 +339,44 @@ export default function StructurePage() {
                 className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-all font-medium"
               >
                 {editingBinding ? "Update" : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationOpen && selectedBindingForDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl">
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Delete Binding?</h2>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-slate-300">
+                Are you sure you want to delete the binding between <span className="font-semibold text-white">{selectedBindingForDelete.operatorName}</span> and <span className="font-semibold text-white">{selectedBindingForDelete.supervisorName}</span>? This action cannot be undone.
+              </p>
+              <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3">
+                <p className="text-sm text-red-300">This will remove the supervisor-operator relationship.</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={() => {
+                  setDeleteConfirmationOpen(false);
+                  setSelectedBindingForDelete(null);
+                }}
+                className="px-4 py-2 text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteBinding}
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all font-medium"
+              >
+                Delete
               </button>
             </div>
           </div>
