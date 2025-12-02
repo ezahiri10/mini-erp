@@ -5,6 +5,7 @@ import {
   createLead,
   updateLead,
   deleteLead,
+  convertLeadToClient,
 } from "../controllers/leadsController.ts";
 
 import { authMiddleware } from "../middlewares/authMiddleware.ts";
@@ -15,6 +16,7 @@ const router = Router();
 router.get("/", authMiddleware, getAllLeads);
 router.get("/:id", authMiddleware, getLeadById);
 router.post("/", authMiddleware, createLead);
+router.post("/:id/convert", authMiddleware, convertLeadToClient);
 router.put("/:id", authMiddleware, updateLead);
 router.delete("/:id", authMiddleware, deleteLead);
 

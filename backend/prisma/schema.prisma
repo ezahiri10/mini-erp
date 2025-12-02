@@ -25,6 +25,7 @@ model User {
   email     String   @unique
   password  String
   role      Role
+  status    String   @default("active") // "active" or "inactive"
   createdAt DateTime @default(now())
 
   // Operator / Supervisor relations
@@ -44,7 +45,9 @@ model Lead {
   id         String     @id @default(uuid())
   name       String
   email      String
+  phone      String?
   status     LeadStatus @default(NEW)
+  notes      String?
   assignedTo String? // Operator ID
   createdAt  DateTime   @default(now())
 
@@ -76,14 +79,15 @@ model Claim {
 // Product/Service entity
 // -------------------------
 model Product {
-  id        String   @id @default(uuid())
-  name      String
-  type      String?
-  price     Float
-  clientId  String
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  name        String
+  type        String?
+  price       Float
+  description String?
+  clientId    String?
+  createdAt   DateTime @default(now())
 
-  client User @relation(fields: [clientId], references: [id])
+  client User? @relation(fields: [clientId], references: [id])
 }
 
 // -------------------------

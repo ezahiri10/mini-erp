@@ -14,7 +14,7 @@ export const getAllClaims = async (req: Request, res: Response) => {
 
 export const getClaimById = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     const claim = await prisma.claim.findUnique({ where: { id } });
 
@@ -47,7 +47,7 @@ export const createClaim = async (req: Request, res: Response) => {
 
 export const updateClaim = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     const { title, description, status } = req.body;
 
@@ -64,7 +64,7 @@ export const updateClaim = async (req: Request, res: Response) => {
 
 export const deleteClaim = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     await prisma.claim.delete({ where: { id } });
 

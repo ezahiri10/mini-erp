@@ -14,7 +14,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const getProductById = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     const product = await prisma.product.findUnique({
       where: { id },
@@ -35,7 +35,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const product = await prisma.product.create({
       data: {
         name,
-        type, // "product" | "service"
+        type,
         price: Number(price),
         description,
       },
@@ -43,13 +43,14 @@ export const createProduct = async (req: Request, res: Response) => {
 
     return res.status(201).json({ message: "Product created", product });
   } catch (error) {
+    console.error("Create product error:", error);
     return res.status(500).json({ error: "Failed to create product" });
   }
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const { name, type, price, description } = req.body;
 
     const product = await prisma.product.update({
@@ -70,7 +71,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     await prisma.product.delete({ where: { id } });
 

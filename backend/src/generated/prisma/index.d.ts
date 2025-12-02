@@ -1377,6 +1377,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     role: $Enums.Role | null
+    status: string | null
     createdAt: Date | null
   }
 
@@ -1386,6 +1387,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     role: $Enums.Role | null
+    status: string | null
     createdAt: Date | null
   }
 
@@ -1395,6 +1397,7 @@ export namespace Prisma {
     email: number
     password: number
     role: number
+    status: number
     createdAt: number
     _all: number
   }
@@ -1406,6 +1409,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    status?: true
     createdAt?: true
   }
 
@@ -1415,6 +1419,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    status?: true
     createdAt?: true
   }
 
@@ -1424,6 +1429,7 @@ export namespace Prisma {
     email?: true
     password?: true
     role?: true
+    status?: true
     createdAt?: true
     _all?: true
   }
@@ -1506,6 +1512,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status: string
     createdAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -1532,6 +1539,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
     leadsAssigned?: boolean | User$leadsAssignedArgs<ExtArgs>
     claimsAssigned?: boolean | User$claimsAssignedArgs<ExtArgs>
@@ -1547,6 +1555,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1556,6 +1565,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
   }
 
@@ -1584,6 +1594,7 @@ export namespace Prisma {
       email: string
       password: string
       role: $Enums.Role
+      status: string
       createdAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1988,6 +1999,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
+    readonly status: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -2431,7 +2443,9 @@ export namespace Prisma {
     id: string | null
     name: string | null
     email: string | null
+    phone: string | null
     status: $Enums.LeadStatus | null
+    notes: string | null
     assignedTo: string | null
     createdAt: Date | null
   }
@@ -2440,7 +2454,9 @@ export namespace Prisma {
     id: string | null
     name: string | null
     email: string | null
+    phone: string | null
     status: $Enums.LeadStatus | null
+    notes: string | null
     assignedTo: string | null
     createdAt: Date | null
   }
@@ -2449,7 +2465,9 @@ export namespace Prisma {
     id: number
     name: number
     email: number
+    phone: number
     status: number
+    notes: number
     assignedTo: number
     createdAt: number
     _all: number
@@ -2460,7 +2478,9 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
+    phone?: true
     status?: true
+    notes?: true
     assignedTo?: true
     createdAt?: true
   }
@@ -2469,7 +2489,9 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
+    phone?: true
     status?: true
+    notes?: true
     assignedTo?: true
     createdAt?: true
   }
@@ -2478,7 +2500,9 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
+    phone?: true
     status?: true
+    notes?: true
     assignedTo?: true
     createdAt?: true
     _all?: true
@@ -2560,7 +2584,9 @@ export namespace Prisma {
     id: string
     name: string
     email: string
+    phone: string | null
     status: $Enums.LeadStatus
+    notes: string | null
     assignedTo: string | null
     createdAt: Date
     _count: LeadCountAggregateOutputType | null
@@ -2586,7 +2612,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
+    phone?: boolean
     status?: boolean
+    notes?: boolean
     assignedTo?: boolean
     createdAt?: boolean
     comments?: boolean | Lead$commentsArgs<ExtArgs>
@@ -2598,7 +2626,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
+    phone?: boolean
     status?: boolean
+    notes?: boolean
     assignedTo?: boolean
     createdAt?: boolean
     assignedUser?: boolean | Lead$assignedUserArgs<ExtArgs>
@@ -2608,7 +2638,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
+    phone?: boolean
     status?: boolean
+    notes?: boolean
     assignedTo?: boolean
     createdAt?: boolean
   }
@@ -2632,7 +2664,9 @@ export namespace Prisma {
       id: string
       name: string
       email: string
+      phone: string | null
       status: $Enums.LeadStatus
+      notes: string | null
       assignedTo: string | null
       createdAt: Date
     }, ExtArgs["result"]["lead"]>
@@ -3033,7 +3067,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Lead", 'String'>
     readonly name: FieldRef<"Lead", 'String'>
     readonly email: FieldRef<"Lead", 'String'>
+    readonly phone: FieldRef<"Lead", 'String'>
     readonly status: FieldRef<"Lead", 'LeadStatus'>
+    readonly notes: FieldRef<"Lead", 'String'>
     readonly assignedTo: FieldRef<"Lead", 'String'>
     readonly createdAt: FieldRef<"Lead", 'DateTime'>
   }
@@ -4440,6 +4476,7 @@ export namespace Prisma {
     name: string | null
     type: string | null
     price: number | null
+    description: string | null
     clientId: string | null
     createdAt: Date | null
   }
@@ -4449,6 +4486,7 @@ export namespace Prisma {
     name: string | null
     type: string | null
     price: number | null
+    description: string | null
     clientId: string | null
     createdAt: Date | null
   }
@@ -4458,6 +4496,7 @@ export namespace Prisma {
     name: number
     type: number
     price: number
+    description: number
     clientId: number
     createdAt: number
     _all: number
@@ -4477,6 +4516,7 @@ export namespace Prisma {
     name?: true
     type?: true
     price?: true
+    description?: true
     clientId?: true
     createdAt?: true
   }
@@ -4486,6 +4526,7 @@ export namespace Prisma {
     name?: true
     type?: true
     price?: true
+    description?: true
     clientId?: true
     createdAt?: true
   }
@@ -4495,6 +4536,7 @@ export namespace Prisma {
     name?: true
     type?: true
     price?: true
+    description?: true
     clientId?: true
     createdAt?: true
     _all?: true
@@ -4591,7 +4633,8 @@ export namespace Prisma {
     name: string
     type: string | null
     price: number
-    clientId: string
+    description: string | null
+    clientId: string | null
     createdAt: Date
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
@@ -4619,9 +4662,10 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     price?: boolean
+    description?: boolean
     clientId?: boolean
     createdAt?: boolean
-    client?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | Product$clientArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
   export type ProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4629,9 +4673,10 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     price?: boolean
+    description?: boolean
     clientId?: boolean
     createdAt?: boolean
-    client?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | Product$clientArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
   export type ProductSelectScalar = {
@@ -4639,28 +4684,30 @@ export namespace Prisma {
     name?: boolean
     type?: boolean
     price?: boolean
+    description?: boolean
     clientId?: boolean
     createdAt?: boolean
   }
 
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    client?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | Product$clientArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    client?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | Product$clientArgs<ExtArgs>
   }
 
   export type $ProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Product"
     objects: {
-      client: Prisma.$UserPayload<ExtArgs>
+      client: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       type: string | null
       price: number
-      clientId: string
+      description: string | null
+      clientId: string | null
       createdAt: Date
     }, ExtArgs["result"]["product"]>
     composites: {}
@@ -5026,7 +5073,7 @@ export namespace Prisma {
    */
   export interface Prisma__ProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    client<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    client<T extends Product$clientArgs<ExtArgs> = {}>(args?: Subset<T, Product$clientArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5060,6 +5107,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Product", 'String'>
     readonly type: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Float'>
+    readonly description: FieldRef<"Product", 'String'>
     readonly clientId: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
   }
@@ -5377,6 +5425,21 @@ export namespace Prisma {
      * Filter which Products to delete
      */
     where?: ProductWhereInput
+  }
+
+  /**
+   * Product.client
+   */
+  export type Product$clientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -6401,6 +6464,7 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     role: 'role',
+    status: 'status',
     createdAt: 'createdAt'
   };
 
@@ -6411,7 +6475,9 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     email: 'email',
+    phone: 'phone',
     status: 'status',
+    notes: 'notes',
     assignedTo: 'assignedTo',
     createdAt: 'createdAt'
   };
@@ -6438,6 +6504,7 @@ export namespace Prisma {
     name: 'name',
     type: 'type',
     price: 'price',
+    description: 'description',
     clientId: 'clientId',
     createdAt: 'createdAt'
   };
@@ -6596,6 +6663,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
+    status?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     leadsAssigned?: LeadListRelationFilter
     claimsAssigned?: ClaimListRelationFilter
@@ -6610,6 +6678,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     leadsAssigned?: LeadOrderByRelationAggregateInput
     claimsAssigned?: ClaimOrderByRelationAggregateInput
@@ -6627,6 +6696,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
+    status?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     leadsAssigned?: LeadListRelationFilter
     claimsAssigned?: ClaimListRelationFilter
@@ -6641,6 +6711,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -6656,6 +6727,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
+    status?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -6666,7 +6738,9 @@ export namespace Prisma {
     id?: StringFilter<"Lead"> | string
     name?: StringFilter<"Lead"> | string
     email?: StringFilter<"Lead"> | string
+    phone?: StringNullableFilter<"Lead"> | string | null
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+    notes?: StringNullableFilter<"Lead"> | string | null
     assignedTo?: StringNullableFilter<"Lead"> | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     comments?: CommentListRelationFilter
@@ -6677,7 +6751,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    phone?: SortOrderInput | SortOrder
     status?: SortOrder
+    notes?: SortOrderInput | SortOrder
     assignedTo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     comments?: CommentOrderByRelationAggregateInput
@@ -6691,7 +6767,9 @@ export namespace Prisma {
     NOT?: LeadWhereInput | LeadWhereInput[]
     name?: StringFilter<"Lead"> | string
     email?: StringFilter<"Lead"> | string
+    phone?: StringNullableFilter<"Lead"> | string | null
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+    notes?: StringNullableFilter<"Lead"> | string | null
     assignedTo?: StringNullableFilter<"Lead"> | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     comments?: CommentListRelationFilter
@@ -6702,7 +6780,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    phone?: SortOrderInput | SortOrder
     status?: SortOrder
+    notes?: SortOrderInput | SortOrder
     assignedTo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: LeadCountOrderByAggregateInput
@@ -6717,7 +6797,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Lead"> | string
     name?: StringWithAggregatesFilter<"Lead"> | string
     email?: StringWithAggregatesFilter<"Lead"> | string
+    phone?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     status?: EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
+    notes?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     assignedTo?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
   }
@@ -6806,9 +6888,10 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     type?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    clientId?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    clientId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
-    client?: XOR<UserRelationFilter, UserWhereInput>
+    client?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -6816,7 +6899,8 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrderInput | SortOrder
     price?: SortOrder
-    clientId?: SortOrder
+    description?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     client?: UserOrderByWithRelationInput
   }
@@ -6829,9 +6913,10 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     type?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    clientId?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    clientId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
-    client?: XOR<UserRelationFilter, UserWhereInput>
+    client?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -6839,7 +6924,8 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrderInput | SortOrder
     price?: SortOrder
-    clientId?: SortOrder
+    description?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
@@ -6856,7 +6942,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Product"> | string
     type?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: FloatWithAggregatesFilter<"Product"> | number
-    clientId?: StringWithAggregatesFilter<"Product"> | string
+    description?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    clientId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
 
@@ -6932,6 +7019,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimCreateNestedManyWithoutAssignedUserInput
@@ -6946,6 +7034,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimUncheckedCreateNestedManyWithoutAssignedUserInput
@@ -6960,6 +7049,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUpdateManyWithoutAssignedUserNestedInput
@@ -6974,6 +7064,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUncheckedUpdateManyWithoutAssignedUserNestedInput
@@ -6988,6 +7079,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
   }
 
@@ -6997,6 +7089,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7006,6 +7099,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7013,7 +7107,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutLeadInput
     assignedUser?: UserCreateNestedOneWithoutLeadsAssignedInput
@@ -7023,7 +7119,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     assignedTo?: string | null
     createdAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutLeadInput
@@ -7033,7 +7131,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutLeadNestedInput
     assignedUser?: UserUpdateOneWithoutLeadsAssignedNestedInput
@@ -7043,7 +7143,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutLeadNestedInput
@@ -7053,7 +7155,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     assignedTo?: string | null
     createdAt?: Date | string
   }
@@ -7062,7 +7166,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7070,7 +7176,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7159,8 +7267,9 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
+    description?: string | null
     createdAt?: Date | string
-    client: UserCreateNestedOneWithoutProductsAsClientInput
+    client?: UserCreateNestedOneWithoutProductsAsClientInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -7168,7 +7277,8 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
-    clientId: string
+    description?: string | null
+    clientId?: string | null
     createdAt?: Date | string
   }
 
@@ -7177,8 +7287,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    client?: UserUpdateOneRequiredWithoutProductsAsClientNestedInput
+    client?: UserUpdateOneWithoutProductsAsClientNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -7186,7 +7297,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    clientId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7195,7 +7307,8 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
-    clientId: string
+    description?: string | null
+    clientId?: string | null
     createdAt?: Date | string
   }
 
@@ -7204,6 +7317,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7212,7 +7326,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    clientId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7355,6 +7470,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7364,6 +7480,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7373,6 +7490,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7418,13 +7536,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type EnumLeadStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -7438,6 +7549,13 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type EnumLeadStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
   }
 
   export type UserNullableRelationFilter = {
@@ -7454,7 +7572,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     status?: SortOrder
+    notes?: SortOrder
     assignedTo?: SortOrder
     createdAt?: SortOrder
   }
@@ -7463,7 +7583,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     status?: SortOrder
+    notes?: SortOrder
     assignedTo?: SortOrder
     createdAt?: SortOrder
   }
@@ -7472,19 +7594,11 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     status?: SortOrder
+    notes?: SortOrder
     assignedTo?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type EnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
-    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7503,6 +7617,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
   }
 
   export type EnumClaimStatusFilter<$PrismaModel = never> = {
@@ -7582,6 +7706,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     clientId?: SortOrder
     createdAt?: SortOrder
   }
@@ -7595,6 +7720,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     clientId?: SortOrder
     createdAt?: SortOrder
   }
@@ -7604,6 +7730,7 @@ export namespace Prisma {
     name?: SortOrder
     type?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     clientId?: SortOrder
     createdAt?: SortOrder
   }
@@ -7907,6 +8034,10 @@ export namespace Prisma {
     connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type EnumLeadStatusFieldUpdateOperationsInput = {
     set?: $Enums.LeadStatus
   }
@@ -7933,10 +8064,6 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeadsAssignedInput, UserUpdateWithoutLeadsAssignedInput>, UserUncheckedUpdateWithoutLeadsAssignedInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type CommentUncheckedUpdateManyWithoutLeadNestedInput = {
@@ -8052,10 +8179,12 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUpdateOneRequiredWithoutProductsAsClientNestedInput = {
+  export type UserUpdateOneWithoutProductsAsClientNestedInput = {
     create?: XOR<UserCreateWithoutProductsAsClientInput, UserUncheckedCreateWithoutProductsAsClientInput>
     connectOrCreate?: UserCreateOrConnectWithoutProductsAsClientInput
     upsert?: UserUpsertWithoutProductsAsClientInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProductsAsClientInput, UserUpdateWithoutProductsAsClientInput>, UserUncheckedUpdateWithoutProductsAsClientInput>
   }
@@ -8190,13 +8319,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumLeadStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -8211,14 +8333,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedEnumLeadStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
     in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
-    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
+    not?: NestedEnumLeadStatusFilter<$PrismaModel> | $Enums.LeadStatus
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -8247,6 +8366,16 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStatus | EnumLeadStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStatus[] | ListEnumLeadStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeadStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeadStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumClaimStatusFilter<$PrismaModel = never> = {
@@ -8297,7 +8426,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutLeadInput
   }
@@ -8306,7 +8437,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     createdAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutLeadInput
   }
@@ -8390,6 +8523,7 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
+    description?: string | null
     createdAt?: Date | string
   }
 
@@ -8398,6 +8532,7 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
+    description?: string | null
     createdAt?: Date | string
   }
 
@@ -8460,7 +8595,9 @@ export namespace Prisma {
     id?: StringFilter<"Lead"> | string
     name?: StringFilter<"Lead"> | string
     email?: StringFilter<"Lead"> | string
+    phone?: StringNullableFilter<"Lead"> | string | null
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+    notes?: StringNullableFilter<"Lead"> | string | null
     assignedTo?: StringNullableFilter<"Lead"> | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
   }
@@ -8535,7 +8672,8 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     type?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    clientId?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    clientId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
   }
 
@@ -8599,6 +8737,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     claimsAssigned?: ClaimCreateNestedManyWithoutAssignedUserInput
     claimsAsClient?: ClaimCreateNestedManyWithoutClientInput
@@ -8612,6 +8751,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     claimsAssigned?: ClaimUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAsClient?: ClaimUncheckedCreateNestedManyWithoutClientInput
@@ -8657,6 +8797,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimsAssigned?: ClaimUpdateManyWithoutAssignedUserNestedInput
     claimsAsClient?: ClaimUpdateManyWithoutClientNestedInput
@@ -8670,6 +8811,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimsAssigned?: ClaimUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAsClient?: ClaimUncheckedUpdateManyWithoutClientNestedInput
@@ -8683,6 +8825,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadCreateNestedManyWithoutAssignedUserInput
     claimsAsClient?: ClaimCreateNestedManyWithoutClientInput
@@ -8696,6 +8839,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAsClient?: ClaimUncheckedCreateNestedManyWithoutClientInput
@@ -8714,6 +8858,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimCreateNestedManyWithoutAssignedUserInput
@@ -8727,6 +8872,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimUncheckedCreateNestedManyWithoutAssignedUserInput
@@ -8782,6 +8928,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUpdateManyWithoutAssignedUserNestedInput
     claimsAsClient?: ClaimUpdateManyWithoutClientNestedInput
@@ -8795,6 +8942,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAsClient?: ClaimUncheckedUpdateManyWithoutClientNestedInput
@@ -8819,6 +8967,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUpdateManyWithoutAssignedUserNestedInput
@@ -8832,6 +8981,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUncheckedUpdateManyWithoutAssignedUserNestedInput
@@ -8861,6 +9011,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimCreateNestedManyWithoutAssignedUserInput
@@ -8874,6 +9025,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimUncheckedCreateNestedManyWithoutAssignedUserInput
@@ -8903,6 +9055,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUpdateManyWithoutAssignedUserNestedInput
@@ -8916,6 +9069,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUncheckedUpdateManyWithoutAssignedUserNestedInput
@@ -8929,6 +9083,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimCreateNestedManyWithoutAssignedUserInput
@@ -8942,6 +9097,7 @@ export namespace Prisma {
     email: string
     password: string
     role: $Enums.Role
+    status?: string
     createdAt?: Date | string
     leadsAssigned?: LeadUncheckedCreateNestedManyWithoutAssignedUserInput
     claimsAssigned?: ClaimUncheckedCreateNestedManyWithoutAssignedUserInput
@@ -8958,7 +9114,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     createdAt?: Date | string
     assignedUser?: UserCreateNestedOneWithoutLeadsAssignedInput
   }
@@ -8967,7 +9125,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     assignedTo?: string | null
     createdAt?: Date | string
   }
@@ -9021,6 +9181,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUpdateManyWithoutAssignedUserNestedInput
@@ -9034,6 +9195,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadsAssigned?: LeadUncheckedUpdateManyWithoutAssignedUserNestedInput
     claimsAssigned?: ClaimUncheckedUpdateManyWithoutAssignedUserNestedInput
@@ -9056,7 +9218,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedUser?: UserUpdateOneWithoutLeadsAssignedNestedInput
   }
@@ -9065,7 +9229,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9107,7 +9273,9 @@ export namespace Prisma {
     id?: string
     name: string
     email: string
+    phone?: string | null
     status?: $Enums.LeadStatus
+    notes?: string | null
     createdAt?: Date | string
   }
 
@@ -9136,6 +9304,7 @@ export namespace Prisma {
     name: string
     type?: string | null
     price: number
+    description?: string | null
     createdAt?: Date | string
   }
 
@@ -9151,7 +9320,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutLeadNestedInput
   }
@@ -9160,7 +9331,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutLeadNestedInput
   }
@@ -9169,7 +9342,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9242,6 +9417,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9250,6 +9426,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9258,6 +9435,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

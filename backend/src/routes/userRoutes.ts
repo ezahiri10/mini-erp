@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  createUser,
   getAllUsers,
   getUserById,
   updateUser,
@@ -11,6 +12,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.ts";
 
 const router = Router();
 
+router.post("/", authMiddleware, createUser);
 router.get("/", authMiddleware, getAllUsers);
 router.get("/:id", authMiddleware, getUserById);
 router.put("/:id", authMiddleware, updateUser);

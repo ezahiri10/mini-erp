@@ -128,6 +128,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
+  status: 'status',
   createdAt: 'createdAt'
 };
 
@@ -135,7 +136,9 @@ exports.Prisma.LeadScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  phone: 'phone',
   status: 'status',
+  notes: 'notes',
   assignedTo: 'assignedTo',
   createdAt: 'createdAt'
 };
@@ -156,6 +159,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   name: 'name',
   type: 'type',
   price: 'price',
+  description: 'description',
   clientId: 'clientId',
   createdAt: 'createdAt'
 };
