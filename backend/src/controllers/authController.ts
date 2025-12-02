@@ -1,42 +1,47 @@
 import { Request, Response } from "express";
 import prisma from "../utils/prisma.ts";
-import { hashPassword, comparePassword } from "../utils/hash.ts";
+import { comparePassword } from "../utils/hash.ts";
 import { generateToken } from "../utils/jwt.ts";
-
-export const register = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password } = req.body;
-
-    // check if user exists
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) return res.status(400).json({ message: "Email already used" });
-
-    const hashed = await hashPassword(password);
-
-    const user = await prisma.user.create({
-      data: { name, email, password: hashed },
-    });
-
-    return res.json({ message: "User registered", user });
-  } catch (err) {
-    return res.status(500).json({ error: "Server error", details: err });
-  }
-};
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
+
+    // Validate inputs
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    if (!role) {
+      return res.status(400).json({ message: "Role is required" });
+    }
 
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
+    // Verify password
     const match = await comparePassword(password, user.password);
-    if (!match) return res.status(400).json({ message: "Invalid credentials" });
+    if (!match) return res.status(401).json({ message: "Invalid credentials" });
 
-    const token = generateToken({ id: user.id, role: user.role });
+    // Verify role matches
+    if (user.role !== role) {
+      return res.status(403).json({ message: `Invalid role. Your account has role: ${user.role}` });
+    }
 
-    return res.json({ message: "Login successful", token });
+    const token = generateToken({ id: user.id, role: user.role, email: user.email });
+
+    return res.json({ 
+      message: "Login successful", 
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (err) {
+    console.error("Login error:", err);
     return res.status(500).json({ error: "Server error", details: err });
   }
 };

@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { register, login, me } from "../controllers/authController.ts";
+import { login, me } from "../controllers/authController.ts";
 import { authMiddleware } from "../middlewares/authMiddleware.ts";
 
 const router = Router();
 
 // Public routes
-router.post("/register", register);
 router.post("/login", login);
 
 // Protected route
