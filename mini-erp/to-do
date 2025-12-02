@@ -1,0 +1,197 @@
+## Backend API Endpoints - CONFIRMED ✅
+
+### Authentication Endpoints (CONFIRMED WITH BACKEND)
+
+1. **POST /api/auth/login** ✅ IMPLEMENTED
+   - Purpose: Login user with email and password
+   - Body: `{ "email": "string", "password": "string" }`
+   - Response: `{ "token": "JWT", "authToken": "JWT", "user": {...} }`
+   - Status: 200 OK
+   - Errors: 400, 401, 500
+
+2. **GET /api/auth/me** ✅ IMPLEMENTED
+   - Purpose: Get current logged-in user information
+   - Headers: Authorization: Bearer <token>
+   - Response: `{ "user": { "id", "firstName", "lastName", "email", "role" } }`
+   - Status: 200 OK
+   - Errors: 401, 404, 500
+
+3. **POST /api/auth/logout** ✅ IMPLEMENTED
+   - Purpose: Logout user and clear session
+   - Headers: Authorization: Bearer <token>
+   - Response: `{ "success": true, "message": "Logged out successfully" }`
+   - Status: 200 OK
+   - Errors: 401, 500
+
+4. **POST /api/auth/register** ❌ DISABLED
+   - NOTE: Registration is disabled on backend
+   - Users are created by admins only via POST /api/admin/users
+   - Frontend signup page removed and redirects to login
+
+## Roles
+
+Available roles (from backend):
+- `client` - Regular client user
+- `admin` - Administrator
+- `supervisor` - Supervisor
+- `operator` - Operator
+
+## Frontend Implementation Checklist
+
+- [x] Login page - Uses POST /api/auth/login ✅
+- [x] Logout button - Uses POST /api/auth/logout ✅
+- [x] Token storage - localStorage.setItem("token") ✅
+- [x] Role storage - localStorage.setItem("userRole") ✅
+- [x] Authorization header - Bearer token format ✅
+- [x] Auto-redirect on 401 - Redirects to /login ✅
+- [x] Get current user - Uses GET /api/auth/me (NEW)
+- [x] Signup disabled - Redirect to login ✅
+- [ ] Add profile page - Uses GET /api/auth/me
+- [ ] Add role-based UI - Show content based on role
+- [ ] Add protected routes middleware
+
+## Backend Confirmed Features
+
+- JWT token expires in 7 days
+- Passwords hashed with bcrypt
+- Email must be unique
+- All timestamps in ISO 8601 format
+- Roles returned in lowercase
+
+## Next Steps
+
+1. ✅ Create GET /api/auth/me API call in frontend
+2. ✅ Disable registration/signup flow
+3. ❌ Create POST /api/admin/users endpoint for admin user creation
+4. ❌ Create profile page that uses GET /api/auth/me
+5. ❌ Add role-based access control UI
+6. ❌ Get client/product/claims endpoints working
+
+## Frontend Implementation Status
+
+### ✅ Completed
+- [x] Login page with authentication
+- [x] Logout functionality
+- [x] Token storage and management
+- [x] API utility functions (GET, POST, PATCH, DELETE)
+- [x] Dashboard with products and claims
+- [x] Orders/Products page
+- [x] Claim submission modal
+- [x] Error handling and loading states
+- [x] Role-based storage
+- [x] Professional UI design
+
+### 🔄 In Progress / Next Steps
+
+#### 1. **Create Profile/User Page** (HIGH PRIORITY)
+   - [ ] Create `/app/clients/profile/page.tsx`
+   - [ ] Use `apiGetCurrentUser()` to fetch user info
+   - [ ] Display: firstName, lastName, email, role
+   - [ ] Add to navigation/header
+   - [ ] Link from logout button
+
+#### 2. **Add Protected Routes Middleware** (HIGH PRIORITY)
+   - [ ] Create `/app/middleware.ts`
+   - [ ] Check for token on protected routes
+   - [ ] Redirect to login if no token
+   - [ ] Apply to: `/clients/*` routes
+
+#### 3. **Create Navigation Component** (MEDIUM PRIORITY)
+   - [ ] Create `/app/components/Navigation.tsx`
+   - [ ] Add links: Dashboard, Orders, Profile, Logout
+   - [ ] Show current user role
+   - [ ] Mobile responsive menu
+   - [ ] Add to all client pages
+
+#### 4. **Create Role-Based UI** (MEDIUM PRIORITY)
+   - [ ] Create utility: `hasRole()` checks
+   - [ ] Show/hide UI based on role:
+     - `admin` - See admin features
+     - `supervisor` - See supervisor features
+     - `client` - See client features
+     - `operator` - See operator features
+
+#### 5. **Implement Missing Endpoints** (DEPENDS ON BACKEND)
+   - [ ] Verify `/api/clients/me/products` endpoint exists
+   - [ ] Verify `/api/clients/me/claims` endpoint exists
+   - [ ] Test claim file upload handling
+   - [ ] Handle file download from claims
+
+#### 6. **Add Error Boundaries** (MEDIUM PRIORITY)
+   - [ ] Create `/app/components/ErrorBoundary.tsx`
+   - [ ] Catch component errors gracefully
+   - [ ] Show user-friendly error messages
+
+#### 7. **Create Admin Pages** (LOW PRIORITY - if admin role exists)
+   - [ ] Create `/app/admin/users/page.tsx`
+   - [ ] List all users
+   - [ ] Create user form
+   - [ ] Edit user role
+   - [ ] Delete user
+
+#### 8. **Improve UX** (LOW PRIORITY)
+   - [ ] Add toast notifications
+   - [ ] Add confirmation dialogs for actions
+   - [ ] Add loading skeletons
+   - [ ] Add empty state illustrations
+   - [ ] Add success messages
+
+---
+
+## Backend Requirements
+
+### ✅ Confirmed Implemented
+- [x] POST /api/auth/login
+- [x] GET /api/auth/me
+- [x] POST /api/auth/logout
+- [x] Roles: client, admin, supervisor, operator
+
+### ❌ Need to Verify
+- [ ] GET /api/clients/me/products - Returns products for current user
+- [ ] GET /api/clients/me/claims - Returns claims for current user
+- [ ] POST /api/clients/me/claims - Creates claim with file upload
+- [ ] File upload storage and retrieval
+- [ ] Product assignment to clients
+
+### 🔄 Not Yet Implemented
+- [ ] POST /api/admin/users - Admin creates users
+- [ ] GET /api/admin/users - List all users (admin only)
+- [ ] PUT /api/admin/users/:id - Update user (admin only)
+- [ ] DELETE /api/admin/users/:id - Delete user (admin only)
+
+---
+
+## Quick Start for Next Steps
+
+### Step 1: Create Profile Page
+```bash
+# Create profile page to display current user
+touch /home/ezahiri/mini-erp/app/clients/profile/page.tsx
+```
+
+### Step 2: Create Middleware
+```bash
+# Protect routes that require authentication
+touch /home/ezahiri/mini-erp/app/middleware.ts
+```
+
+### Step 3: Test with Real User
+1. Create a test user in your backend database
+2. Login with those credentials
+3. Verify products and claims load
+4. Test claim submission
+
+---
+
+## Current Frontend Files
+
+📁 `/home/ezahiri/mini-erp/app/`
+- ✅ `login/page.tsx` - Login page
+- ✅ `register/page.tsx` - Redirects to login (disabled)
+- ✅ `clients/dashboard/page.tsx` - Dashboard
+- ✅ `clients/orders/page.tsx` - Products list
+- ✅ `components/LogoutButton.tsx` - Logout
+- ❌ `clients/profile/page.tsx` - **TODO**
+- ❌ `admin/users/page.tsx` - **TODO**
+- ❌ `middleware.ts` - **TODO**
+- ❌ `components/Navigation.tsx` - **TODO**
