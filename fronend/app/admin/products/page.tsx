@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Package, Plus, Edit2, Trash2, Search } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiPost, apiPut, apiDelete, apiGet } from "@/lib/api";
 
 interface Product {
   id: string;
@@ -22,7 +23,7 @@ export default function ProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    type: "PRODUCT" as const,
+    type: "PRODUCT" as "SERVICE" | "PRODUCT",
     price: "",
     description: "",
   });
@@ -34,34 +35,16 @@ export default function ProductsPage() {
   async function fetchProducts() {
     try {
       setLoading(true);
-      // Mock data - replace with actual API: GET /api/products
-      const mockProducts: Product[] = [
-        {
-          id: "p1",
-          name: "Premium Insurance Plan",
-          type: "SERVICE",
-          price: 299,
-          description: "Comprehensive insurance coverage",
-          createdAt: "2024-11-01",
-        },
-        {
-          id: "p2",
-          name: "Basic Health Insurance",
-          type: "SERVICE",
-          price: 149,
-          description: "Basic health coverage",
-          createdAt: "2024-10-15",
-        },
-        {
-          id: "p3",
-          name: "Tech Support Package",
-          type: "PRODUCT",
-          price: 79,
-          description: "24/7 technical support",
-          createdAt: "2024-10-01",
-        },
-      ];
-      setProducts(mockProducts);
+      const data = await apiGet("/products");
+      const mappedProducts = (Array.isArray(data) ? data : data.data || []).map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        type: product.type || "PRODUCT",
+        price: product.price,
+        description: product.description || "",
+        createdAt: product.createdAt ? new Date(product.createdAt).toLocaleDateString() : "N/A",
+      }));
+      setProducts(mappedProducts);
     } catch (err: any) {
       toast.error("Failed to load products");
     } finally {
@@ -269,10 +252,34 @@ export default function ProductsPage() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  toast.success(editingProduct ? "Product updated" : "Product created");
-                  setModalOpen(false);
-                  fetchProducts();
+                onClick={async () => {
+                  if (!formData.name || !formData.price) {
+                    toast.error("Name and price are required");
+                    return;
+                  }
+                  try {
+                    if (editingProduct) {
+                      await apiPut(`/products/${editingProduct.id}`, {
+                        name: formData.name,
+                        type: formData.type,
+                        price: Number(formData.price),
+                        description: formData.description,
+                      });
+                      toast.success("Product updated successfully");
+                    } else {
+                      await apiPost("/products", {
+                        name: formData.name,
+                        type: formData.type,
+                        price: Number(formData.price),
+                        description: formData.description,
+                      });
+                      toast.success("Product created successfully");
+                    }
+                    setModalOpen(false);
+                    fetchProducts();
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to save product");
+                  }
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-lg transition-all font-medium"
               >

@@ -172,7 +172,7 @@ export default function ClientDashboardPage() {
                   <Zap className="w-5 h-5 opacity-60" />
                 </div>
                 <p className="text-sm opacity-80 mb-1">Active Claims</p>
-                <p className="text-4xl font-bold">{claims.filter(c => c.status !== "RESOLVED").length}</p>
+                <p className="text-4xl font-bold">{claims.filter(c => c.status !== "resolved").length}</p>
               </div>
 
               <div className="bg-gradient-to-br from-emerald-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
@@ -181,7 +181,7 @@ export default function ClientDashboardPage() {
                   <Award className="w-5 h-5 opacity-60" />
                 </div>
                 <p className="text-sm opacity-80 mb-1">Resolved Claims</p>
-                <p className="text-4xl font-bold">{claims.filter(c => c.status === "RESOLVED").length}</p>
+                <p className="text-4xl font-bold">{claims.filter(c => c.status === "resolved").length}</p>
               </div>
             </div>
 

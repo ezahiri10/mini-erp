@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, Plus, Edit2, Trash2, UserCheck, MessageSquare, Search } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiPost, apiPut, apiDelete, apiGet } from "@/lib/api";
 
 interface Lead {
   id: string;
@@ -25,7 +26,7 @@ export default function LeadsPage() {
     name: "",
     email: "",
     phone: "",
-    status: "NEW" as const,
+    status: "NEW" as "NEW" | "CONTACTED" | "CONVERTED" | "LOST",
     assignedTo: "",
   });
 
@@ -36,28 +37,17 @@ export default function LeadsPage() {
   async function fetchLeads() {
     try {
       setLoading(true);
-      // Mock data - replace with actual API: GET /api/leads
-      const mockLeads: Lead[] = [
-        {
-          id: "l1",
-          name: "Acme Corp",
-          email: "contact@acme.com",
-          phone: "555-0123",
-          status: "NEW",
-          assignedTo: "3",
-          createdAt: "2024-12-01",
-        },
-        {
-          id: "l2",
-          name: "Tech Solutions",
-          email: "sales@techsol.com",
-          phone: "555-0456",
-          status: "CONTACTED",
-          assignedTo: "3",
-          createdAt: "2024-11-28",
-        },
-      ];
-      setLeads(mockLeads);
+      const data = await apiGet("/leads");
+      const mappedLeads = (Array.isArray(data) ? data : data.data || []).map((lead: any) => ({
+        id: lead.id,
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone || "",
+        status: lead.status || "NEW",
+        assignedTo: lead.assignedTo || "",
+        createdAt: lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "N/A",
+      }));
+      setLeads(mappedLeads);
     } catch (err: any) {
       toast.error("Failed to load leads");
     } finally {
@@ -84,9 +74,13 @@ export default function LeadsPage() {
   };
 
   async function handleConvertToClient(lead: Lead) {
-    // TODO: Call POST /api/leads/:id/convert
-    toast.success(`${lead.name} converted to client`);
-    fetchLeads();
+    try {
+      await apiPost(`/leads/${lead.id}/convert`, {});
+      toast.success(`${lead.name} converted to client`);
+      fetchLeads();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to convert lead");
+    }
   }
 
   return (
@@ -307,10 +301,36 @@ export default function LeadsPage() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  toast.success(editingLead ? "Lead updated" : "Lead created");
-                  setModalOpen(false);
-                  fetchLeads();
+                onClick={async () => {
+                  if (!formData.name || !formData.email) {
+                    toast.error("Name and email are required");
+                    return;
+                  }
+                  try {
+                    if (editingLead) {
+                      await apiPut(`/leads/${editingLead.id}`, {
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        status: formData.status,
+                        notes: "",
+                      });
+                      toast.success("Lead updated successfully");
+                    } else {
+                      await apiPost("/leads", {
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        status: formData.status,
+                        notes: "",
+                      });
+                      toast.success("Lead created successfully");
+                    }
+                    setModalOpen(false);
+                    fetchLeads();
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to save lead");
+                  }
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg transition-all font-medium"
               >

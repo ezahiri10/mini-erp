@@ -77,6 +77,7 @@ export default function OperatorLayout({ children }: { children: React.ReactNode
   async function handleLogout() {
     await apiLogout();
     router.push("/login");
+  }
 
   return (
     <div className="flex min-h-screen bg-slate-900">

@@ -148,6 +148,47 @@ export async function apiPost(endpoint: string, body: any) {
 }
 
 /**
+ * apiPut()
+ */
+export async function apiPut(endpoint: string, body: any) {
+  try {
+    const isFormData = body instanceof FormData;
+    const url = `${API_BASE_URL}${endpoint}`;
+    
+    console.log(`[apiPut] ${url}`, body);
+    
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: getHeaders(isFormData),
+      body: isFormData ? body : JSON.stringify(body),
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("userRole");
+          window.location.href = "/login";
+        }
+      }
+      
+      const data = await res.json().catch(() => ({}));
+      const message = data?.error || data?.message || `API Error: ${res.status} ${res.statusText}`;
+      console.warn("[API Error]", message, data);
+      throw new Error(message);
+    }
+
+    const data = await res.json();
+    console.log(`[apiPut] Success:`, data);
+    return data;
+  } catch (err: any) {
+    throw new Error(err.message || "Failed to update resource");
+  }
+}
+
+/**
  * apiLogin()
  */
 export async function apiLogin(email: string, password: string, role: string) {

@@ -75,8 +75,9 @@ export default function SupervisorLayout({ children }: { children: React.ReactNo
   ];
 
   async function handleLogout() {
-    await apiLogout();
-    router.push("/login");
+    try {
+      await apiLogout();
+      router.push("/login");
       toast.success("Logged out successfully");
     } catch (err) {
       toast.error("Logout failed");

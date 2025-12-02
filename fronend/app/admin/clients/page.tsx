@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Users, Plus, Edit2, Trash2, DollarSign, Activity, Search } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiPost, apiPut, apiDelete, apiGet } from "@/lib/api";
 
 interface Client {
   id: string;
@@ -38,43 +39,22 @@ export default function ClientsPage() {
   async function fetchClients() {
     try {
       setLoading(true);
-      // Mock data - replace with actual API: GET /api/clients
-      const mockClients: Client[] = [
-        {
-          id: "c1",
-          name: "Acme Corp",
-          email: "contact@acme.com",
-          phone: "555-0123",
-          totalIncome: 45000,
-          status: "ACTIVE",
-          createdAt: "2024-10-01",
-          productsCount: 3,
-          claimsCount: 2,
-        },
-        {
-          id: "c2",
-          name: "Tech Solutions Inc",
-          email: "billing@techsol.com",
-          phone: "555-0456",
-          totalIncome: 82000,
-          status: "ACTIVE",
-          createdAt: "2024-09-15",
-          productsCount: 5,
-          claimsCount: 1,
-        },
-        {
-          id: "c3",
-          name: "Global Industries",
-          email: "admin@globalind.com",
-          phone: "555-0789",
+      // Fetch users with role CLIENT to get clients list
+      const data = await apiGet("/users");
+      const clients = (Array.isArray(data) ? data : data.data || [])
+        .filter((user: any) => user.role === "CLIENT")
+        .map((user: any) => ({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone || "",
           totalIncome: 0,
-          status: "INACTIVE",
-          createdAt: "2024-08-20",
+          status: user.status || "ACTIVE",
+          createdAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A",
           productsCount: 0,
           claimsCount: 0,
-        },
-      ];
-      setClients(mockClients);
+        }));
+      setClients(clients);
     } catch (err: any) {
       toast.error("Failed to load clients");
     } finally {
@@ -281,10 +261,35 @@ export default function ClientsPage() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  toast.success(editingClient ? "Client updated" : "Client created");
-                  setModalOpen(false);
-                  fetchClients();
+                onClick={async () => {
+                  if (!formData.name || !formData.email) {
+                    toast.error("Name and email are required");
+                    return;
+                  }
+                  try {
+                    if (editingClient) {
+                      await apiPut(`/users/${editingClient.id}`, {
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                      });
+                      toast.success("Client updated successfully");
+                    } else {
+                      // Create new client user
+                      await apiPost("/users", {
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        role: "CLIENT",
+                        password: Math.random().toString(36).substring(2, 15), // Generate temporary password
+                      });
+                      toast.success("Client created successfully");
+                    }
+                    setModalOpen(false);
+                    fetchClients();
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to save client");
+                  }
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white rounded-lg transition-all font-medium"
               >

@@ -14,6 +14,7 @@ import {
   ToggleLeft,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiPost, apiPut, apiDelete, apiGet } from "@/lib/api";
 
 interface User {
   id: string;
@@ -38,7 +39,7 @@ export default function UsersPage() {
     name: "",
     email: "",
     password: "",
-    role: "OPERATOR" as const,
+    role: "OPERATOR" as "ADMIN" | "SUPERVISOR" | "OPERATOR" | "CLIENT",
   });
 
   useEffect(() => {
@@ -48,34 +49,17 @@ export default function UsersPage() {
   async function fetchUsers() {
     try {
       setLoading(true);
-      // Mock data - replace with actual API: GET /api/users
-      const mockUsers: User[] = [
-        {
-          id: "1",
-          name: "John Admin",
-          email: "admin@example.com",
-          role: "ADMIN",
-          status: "active",
-          createdAt: "2024-01-15",
-        },
-        {
-          id: "2",
-          name: "Sarah Supervisor",
-          email: "supervisor@example.com",
-          role: "SUPERVISOR",
-          status: "active",
-          createdAt: "2024-01-20",
-        },
-        {
-          id: "3",
-          name: "Mike Operator",
-          email: "operator@example.com",
-          role: "OPERATOR",
-          status: "active",
-          createdAt: "2024-02-01",
-        },
-      ];
-      setUsers(mockUsers);
+      const data = await apiGet("/users");
+      // Map the data from backend format to frontend format
+      const mappedUsers = (Array.isArray(data) ? data : data.data || []).map((user: any) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status || "active",
+        createdAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A",
+      }));
+      setUsers(mappedUsers);
     } catch (err: any) {
       toast.error("Failed to load users");
     } finally {
@@ -107,20 +91,38 @@ export default function UsersPage() {
       toast.error("All fields are required");
       return;
     }
-    // TODO: Call POST /api/users with formData
-    toast.success("User created successfully");
-    setModalOpen(false);
-    setFormData({ name: "", email: "", password: "", role: "OPERATOR" });
-    fetchUsers();
+    try {
+      await apiPost("/users", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      });
+      toast.success("User created successfully");
+      setModalOpen(false);
+      setFormData({ name: "", email: "", password: "", role: "OPERATOR" });
+      fetchUsers();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create user");
+    }
   }
 
   async function handleUpdateUser() {
     if (!editingUser) return;
-    // TODO: Call PUT /api/users/:id with formData
-    toast.success("User updated successfully");
-    setModalOpen(false);
-    setEditingUser(null);
-    fetchUsers();
+    try {
+      await apiPut(`/users/${editingUser.id}`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password || undefined,
+        role: formData.role,
+      });
+      toast.success("User updated successfully");
+      setModalOpen(false);
+      setEditingUser(null);
+      fetchUsers();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update user");
+    }
   }
 
   async function handleResetPassword() {
@@ -128,16 +130,28 @@ export default function UsersPage() {
       toast.error("Password is required");
       return;
     }
-    // TODO: Call PATCH /api/users/:id/password
-    toast.success("Password reset successfully");
-    setPasswordModal(false);
-    setNewPassword("");
+    try {
+      await apiPut(`/users/${editingUser.id}`, {
+        password: newPassword,
+      });
+      toast.success("Password reset successfully");
+      setPasswordModal(false);
+      setNewPassword("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to reset password");
+    }
   }
 
   async function handleToggleStatus(user: User) {
-    // TODO: Call PATCH /api/users/:id/deactivate or /api/users/:id/activate
-    toast.success(`User ${user.status === "active" ? "deactivated" : "activated"}`);
-    fetchUsers();
+    try {
+      // Toggle status between active and inactive
+      const newStatus = user.status === "active" ? "inactive" : "active";
+      await apiPut(`/users/${user.id}`, { status: newStatus });
+      toast.success(`User ${newStatus === "active" ? "activated" : "deactivated"}`);
+      fetchUsers();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to toggle user status");
+    }
   }
 
   return (
