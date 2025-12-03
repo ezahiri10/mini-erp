@@ -9,7 +9,7 @@ async function main() {
     await prisma.user.deleteMany({
       where: {
         email: {
-          in: ["demo@example.com", "admin@example.com"],
+          in: ["demo@example.com", "admin@example.com", "client@example.com"],
         },
       },
     });
@@ -57,7 +57,26 @@ async function main() {
   } catch (e) {
     console.log("Error creating admin:", e);
   }
-}
+
+  // Create a CLIENT user
+  const clientPassword = "client123";
+  const clientEmail = "client@example.com";
+  try {
+    const clientHashedPassword = await hashPassword(clientPassword);
+    const client = await prisma.user.create({
+      data: {
+        name: "Demo Client",
+        email: clientEmail,
+        password: clientHashedPassword,
+        role: "CLIENT",
+      },
+    });
+    console.log("✓ Created Client User:");
+    console.log(`  Email: ${clientEmail}`);
+    console.log(`  Password: ${clientPassword}\n`);
+  } catch (e) {
+    console.log("Error creating client:", e);
+  }
 
 main()
   .catch((e) => {

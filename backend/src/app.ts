@@ -8,6 +8,8 @@ import userRoutes from "./routes/userRoutes.ts";
 import leadRoutes from "./routes/leadRoutes.ts";
 import claimRoutes from "./routes/claimRoutes.ts";
 import productRoutes from "./routes/productRoutes.ts";
+import operatorRoutes from "./routes/operatorRoutes.ts";
+import clientRoutes from "./routes/clientRoutes.ts";
 
 dotenv.config();
 
@@ -27,6 +29,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json()); // parse JSON request bodies
+app.use(express.static("uploads")); // Serve uploaded files
 
 // -----------------------
 // Routes
@@ -36,6 +39,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/claims", claimRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/operator", operatorRoutes);
+app.use("/api/client", clientRoutes);
 
 // -----------------------
 // 404 Handler

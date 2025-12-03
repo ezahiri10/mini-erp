@@ -25,8 +25,21 @@ export default function ClientOrdersPage() {
   async function fetchProducts() {
     try {
       setLoading(true);
-      const data = await apiGet("/clients/me/products");
-      setProducts(Array.isArray(data) ? data : []);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const token = localStorage.getItem("clientToken");
+
+      if (!token) {
+        toast.error("Not authenticated");
+        setProducts([]);
+        return;
+      }
+
+      const res = await fetch(`${apiUrl}/client/products`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = res.ok ? await res.json() : {};
+      setProducts(Array.isArray(data.products) ? data.products : []);
     } catch (err: any) {
       console.error("Error fetching products:", err);
       toast.error("Failed to load products");

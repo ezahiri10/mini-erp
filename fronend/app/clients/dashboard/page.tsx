@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiGet, apiPost } from "@/lib/api";
 import { 
   X, Plus, FileText, AlertCircle, CheckCircle, Clock, 
@@ -25,6 +26,7 @@ interface Claim {
 }
 
 export default function ClientDashboardPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [claims, setClaims] = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,14 +42,44 @@ export default function ClientDashboardPage() {
   async function fetchClientData() {
     try {
       setLoading(true);
-      const [productsData, claimsData] = await Promise.all([
-        apiGet("/clients/me/products"),
-        apiGet("/clients/me/claims"),
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const token = localStorage.getItem("clientToken");
+      
+      console.log("🔍 Checking authentication...");
+      console.log("API URL:", apiUrl);
+      console.log("Token exists:", !!token);
+      
+      if (!token) {
+        console.log("❌ No token found, redirecting to login");
+        toast.error("Not authenticated. Redirecting to login...");
+        setTimeout(() => router.push("/client/login"), 1000);
+        return;
+      }
+
+      console.log("✓ Token found, fetching data...");
+
+      const [productsRes, claimsRes] = await Promise.all([
+        fetch(`${apiUrl}/client/products`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${apiUrl}/client/claims`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
-      setProducts(Array.isArray(productsData) ? productsData : []);
-      setClaims(Array.isArray(claimsData) ? claimsData : []);
+
+      console.log("Products response status:", productsRes.status);
+      console.log("Claims response status:", claimsRes.status);
+
+      const productsData = productsRes.ok ? await productsRes.json() : {};
+      const claimsData = claimsRes.ok ? await claimsRes.json() : {};
+
+      console.log("Products data:", productsData);
+      console.log("Claims data:", claimsData);
+
+      setProducts(Array.isArray(productsData.products) ? productsData.products : []);
+      setClaims(Array.isArray(claimsData.claims) ? claimsData.claims : []);
     } catch (err: any) {
-      console.error("Error fetching data:", err);
+      console.error("❌ Error fetching data:", err);
       toast.error("Failed to load dashboard data");
       setProducts([]);
       setClaims([]);
@@ -61,18 +93,55 @@ export default function ClientDashboardPage() {
       toast.error("Claim title is required");
       return;
     }
-    if (!newClaimFile) {
-      toast.error("File is required");
-      return;
-    }
 
     setSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append("title", newClaimTitle.trim());
-      formData.append("file", newClaimFile);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const token = localStorage.getItem("clientToken");
 
-      await apiPost("/clients/me/claims", formData);
+      if (!token) {
+        toast.error("Not authenticated");
+        return;
+      }
+
+      // Create claim first
+      const claimRes = await fetch(`${apiUrl}/client/claims`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          title: newClaimTitle.trim(),
+          description: "",
+        }),
+      });
+
+      if (!claimRes.ok) {
+        throw new Error("Failed to create claim");
+      }
+
+      const claimData = await claimRes.json();
+      const claimId = claimData.claim.id;
+
+      // Upload file if provided
+      if (newClaimFile) {
+        const formData = new FormData();
+        formData.append("files", newClaimFile);
+
+        const uploadRes = await fetch(`${apiUrl}/client/claims/${claimId}/upload`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          console.warn("File upload warning");
+        }
+      }
+
       setNewClaimTitle("");
       setNewClaimFile(null);
       setModalOpen(false);

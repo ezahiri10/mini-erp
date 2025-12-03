@@ -1,88 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiLogin } from "@/lib/api";
-import { LogIn, AlertCircle, Shield, User, Lock, Mail } from "lucide-react";
-import { toast } from "react-toastify";
+import { LogIn, AlertCircle, Mail, Lock, Shield, User } from "lucide-react";
 
-export default function LoginPage() {
+export default function ClientLoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Operator");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     // Validate inputs
     if (!email.trim()) {
-      const msg = "Email is required";
-      setError(msg);
-      toast.error(msg);
+      setError("Email is required");
       return;
     }
     if (!password.trim()) {
-      const msg = "Password is required";
-      setError(msg);
-      toast.error(msg);
-      return;
-    }
-    if (!role) {
-      const msg = "Role is required";
-      setError(msg);
-      toast.error(msg);
+      setError("Password is required");
       return;
     }
 
     setLoading(true);
 
     try {
-      const result = await apiLogin(email.trim(), password.trim(), role);
-      console.log("Login successful:", result);
-      
-      // Verify token was saved
-      const savedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      if (!savedToken) {
-        console.error("Token not saved to localStorage!");
-        setError("Login failed: Token not received");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/client/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Login failed");
         setLoading(false);
         return;
       }
-      
-      // Determine redirect path based on user's actual role from server
-      let redirectPath = "/admin"; // Default for Admin
-      
-      if (result.user?.role === "ADMIN") {
-        redirectPath = "/admin";
-      } else if (result.user?.role === "SUPERVISOR") {
-        redirectPath = "/supervisor/dashboard";
-      } else if (result.user?.role === "OPERATOR") {
-        redirectPath = "/operator/dashboard";
-      }
-      
-      console.log("Redirecting to:", redirectPath);
-      
-      // Add small delay before redirect to ensure token is saved
+
+      // Store token
+      localStorage.setItem("clientToken", data.token);
+      localStorage.setItem("clientUser", JSON.stringify(data.user));
+
+      // Small delay before redirect
       setTimeout(() => {
-        router.push(redirectPath);
+        router.push("/client/dashboard");
       }, 300);
     } catch (err: any) {
-      const errorMsg = err.message || "Login failed. Please try again.";
-      setError(errorMsg);
-      console.error("Login error:", err);
+      setError(err.message || "Login error");
       setLoading(false);
     }
-  }
-
-  const roleOptions = [
-    { value: "Admin", label: "Administrator", icon: Shield },
-    { value: "Supervisor", label: "Supervisor", icon: User },
-    { value: "Operator", label: "Operator", icon: User },
-  ];
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -102,15 +75,15 @@ export default function LoginPage() {
                 <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg">
                   <LogIn className="w-8 h-8 text-white" />
                 </div>
-                <h1 className="text-3xl font-bold text-white">Mini ERP</h1>
+                <h1 className="text-3xl font-bold text-white">Client Portal</h1>
               </div>
               
               <div className="space-y-4 pt-4">
                 <h2 className="text-3xl font-bold text-white leading-tight">
-                  Manage Your Business
+                  Manage Your Claims
                 </h2>
                 <p className="text-lg text-blue-100">
-                  Streamline your operations with our comprehensive ERP system. Sign in to access your dashboard and manage claims, products, and team members.
+                  Submit and track your claims efficiently. Upload documents, attach photos, and monitor the status of all your submissions in real-time through our secure portal.
                 </p>
               </div>
 
@@ -118,7 +91,7 @@ export default function LoginPage() {
                 {[
                   { icon: Shield, text: "Secure authentication" },
                   { icon: Lock, text: "Enterprise-grade security" },
-                  { icon: User, text: "Role-based access control" },
+                  { icon: User, text: "Personalized dashboard" },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3 text-blue-100">
                     <item.icon className="w-5 h-5 text-blue-400 flex-shrink-0" />
@@ -137,7 +110,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg">
                   <LogIn className="w-6 h-6 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold text-slate-900 lg:text-white">Mini ERP</h1>
+                <h1 className="text-2xl font-bold text-slate-900 lg:text-white">Client Portal</h1>
               </div>
             </div>
 
@@ -213,40 +186,10 @@ export default function LoginPage() {
                   />
                 </div>
 
-                {/* Role selection */}
-                <div>
-                  <label
-                    htmlFor="role"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4" />
-                      Select Your Role
-                    </div>
-                  </label>
-                  <select
-                    id="role"
-                    value={role}
-                    onChange={(e) => {
-                      setRole(e.target.value);
-                      setError("");
-                    }}
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer"
-                    disabled={loading}
-                    required
-                  >
-                    {roleOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {/* Submit button */}
                 <button
                   type="submit"
-                  disabled={loading || !email || !password || !role}
+                  disabled={loading || !email || !password}
                   className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 duration-200"
                 >
                   {loading ? (
@@ -278,13 +221,13 @@ export default function LoginPage() {
           <p className="text-xs sm:text-sm font-semibold text-slate-900 lg:text-blue-100 mb-2.5">Demo Credentials</p>
           <div className="space-y-1.5">
             <p className="text-xs sm:text-sm text-slate-700 lg:text-blue-100">
-              Email: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">demo@example.com</span>
+              Email: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">client@example.com</span>
             </p>
             <p className="text-xs sm:text-sm text-slate-700 lg:text-blue-100">
-              Password: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">password123</span>
+              Password: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">client123</span>
             </p>
             <p className="text-xs text-slate-600 lg:text-blue-200 pt-1">
-              Choose your role and sign in
+              Sign in to access your dashboard
             </p>
           </div>
         </div>
