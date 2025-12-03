@@ -127,7 +127,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="bg-slate-700/50 rounded-lg p-3 mb-3">
                 <p className="text-sm text-slate-400">Logged in as</p>
                 <p className="font-semibold text-slate-200 truncate">{user.name}</p>
-                <p className="text-xs text-slate-500 truncate">{user.email}</p>
               </div>
               <button
                 onClick={async () => {

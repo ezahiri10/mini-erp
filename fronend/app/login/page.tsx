@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiLogin } from "@/lib/api";
 import { LogIn, AlertCircle, Shield, User, Lock, Mail } from "lucide-react";
+import { CustomSelect } from "@/app/components/CustomSelect";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
@@ -224,31 +225,15 @@ export default function LoginPage() {
                       <span>Select Your Role</span>
                     </div>
                   </label>
-                  <div className="relative">
-                    <select
-                      id="role"
-                      value={role}
-                      onChange={(e) => {
-                        setRole(e.target.value);
-                        setError("");
-                      }}
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white text-xs sm:text-sm lg:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer leading-tight"
-                      disabled={loading}
-                      required
-                    >
-                      {roleOptions.map((option) => (
-                        <option key={option.value} value={option.value} className="text-slate-900">
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {/* Custom dropdown arrow */}
-                    <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 flex items-center px-2 text-slate-500 lg:text-slate-400">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                      </svg>
-                    </div>
-                  </div>
+                  <CustomSelect
+                    value={role}
+                    onChange={(newRole) => {
+                      setRole(newRole);
+                      setError("");
+                    }}
+                    options={roleOptions}
+                    disabled={loading}
+                  />
                 </div>
 
                 {/* Submit button */}
@@ -279,22 +264,6 @@ export default function LoginPage() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Demo credentials */}
-        <div className="mt-8 bg-white lg:bg-blue-900/40 backdrop-blur-sm border border-blue-200 lg:border-blue-400/30 rounded-lg p-4 sm:p-6 text-center">
-          <p className="text-xs sm:text-sm font-semibold text-slate-900 lg:text-blue-100 mb-2.5">Demo Credentials</p>
-          <div className="space-y-1.5">
-            <p className="text-xs sm:text-sm text-slate-700 lg:text-blue-100">
-              Email: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">demo@example.com</span>
-            </p>
-            <p className="text-xs sm:text-sm text-slate-700 lg:text-blue-100">
-              Password: <span className="font-mono font-semibold text-blue-600 lg:text-blue-300">password123</span>
-            </p>
-            <p className="text-xs text-slate-600 lg:text-blue-200 pt-1">
-              Choose your role and sign in
-            </p>
           </div>
         </div>
       </div>
