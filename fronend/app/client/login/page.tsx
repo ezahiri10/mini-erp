@@ -136,7 +136,7 @@ export default function ClientLoginPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
+                    className="block text-xs sm:text-sm font-semibold text-slate-900 lg:text-white mb-2"
                   >
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4" />
@@ -152,7 +152,7 @@ export default function ClientLoginPage() {
                       setError("");
                     }}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 text-sm sm:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     disabled={loading}
                     autoComplete="email"
                     required
@@ -163,7 +163,7 @@ export default function ClientLoginPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
+                    className="block text-xs sm:text-sm font-semibold text-slate-900 lg:text-white mb-2"
                   >
                     <div className="flex items-center gap-2">
                       <Lock className="w-4 h-4" />
@@ -179,7 +179,7 @@ export default function ClientLoginPage() {
                       setError("");
                     }}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 text-sm sm:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     disabled={loading}
                     autoComplete="current-password"
                     required
@@ -190,12 +190,13 @@ export default function ClientLoginPage() {
                 <button
                   type="submit"
                   disabled={loading || !email || !password}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 duration-200"
+                  className="w-full px-4 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 duration-200"
                 >
                   {loading ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Signing in...
+                      <span className="hidden sm:inline">Signing in...</span>
+                      <span className="sm:hidden">Signing...</span>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-2">

@@ -163,7 +163,7 @@ export default function LoginPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
+                    className="block text-xs sm:text-sm font-semibold text-slate-900 lg:text-white mb-2"
                   >
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4" />
@@ -179,7 +179,7 @@ export default function LoginPage() {
                       setError("");
                     }}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 text-sm sm:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     disabled={loading}
                     autoComplete="email"
                     required
@@ -190,7 +190,7 @@ export default function LoginPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
+                    className="block text-xs sm:text-sm font-semibold text-slate-900 lg:text-white mb-2"
                   >
                     <div className="flex items-center gap-2">
                       <Lock className="w-4 h-4" />
@@ -206,7 +206,7 @@ export default function LoginPage() {
                       setError("");
                     }}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white placeholder-slate-500 text-sm sm:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     disabled={loading}
                     autoComplete="current-password"
                     required
@@ -217,42 +217,51 @@ export default function LoginPage() {
                 <div>
                   <label
                     htmlFor="role"
-                    className="block text-sm font-semibold text-slate-900 lg:text-white mb-2.5"
+                    className="block text-xs sm:text-sm font-semibold text-slate-900 lg:text-white mb-2"
                   >
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4" />
-                      Select Your Role
+                      <span>Select Your Role</span>
                     </div>
                   </label>
-                  <select
-                    id="role"
-                    value={role}
-                    onChange={(e) => {
-                      setRole(e.target.value);
-                      setError("");
-                    }}
-                    className="w-full px-4 py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer"
-                    disabled={loading}
-                    required
-                  >
-                    {roleOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      id="role"
+                      value={role}
+                      onChange={(e) => {
+                        setRole(e.target.value);
+                        setError("");
+                      }}
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50 lg:bg-slate-700 border border-slate-300 lg:border-slate-600 text-slate-900 lg:text-white text-xs sm:text-sm lg:text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer leading-tight"
+                      disabled={loading}
+                      required
+                    >
+                      {roleOptions.map((option) => (
+                        <option key={option.value} value={option.value} className="text-slate-900">
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    {/* Custom dropdown arrow */}
+                    <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 flex items-center px-2 text-slate-500 lg:text-slate-400">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Submit button */}
                 <button
                   type="submit"
                   disabled={loading || !email || !password || !role}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 duration-200"
+                  className="w-full px-4 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 duration-200"
                 >
                   {loading ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Signing in...
+                      <span className="hidden sm:inline">Signing in...</span>
+                      <span className="sm:hidden">Signing...</span>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-2">

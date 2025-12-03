@@ -1,3 +1,6 @@
+# Final Cleaned Schema.prisma
+
+```prisma
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -127,3 +130,19 @@ model Comment {
   @@index([leadId])
   @@index([claimId])
 }
+```
+
+## Key Improvements in This Schema
+
+1. **Type Safety**: Replaced string statuses with proper enums
+2. **Performance**: Added 8 strategic indexes
+3. **Data Integrity**: Implemented cascade delete and SetNull rules
+4. **Audit Trail**: Added `updatedAt` timestamps
+5. **Clarity**: Improved relation names for semantic meaning
+6. **Organization**: Enums first, models in logical order
+
+## Migration Command
+```bash
+cd backend
+npx prisma migrate dev --name schema_cleanup_v1
+```
